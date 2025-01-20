@@ -1,0 +1,25 @@
+# frozen_string_literal: true
+
+require_relative "lib/difftastic/version"
+
+Gem::Specification.new do |spec|
+	spec.name = "difftastic"
+	spec.version = Difftastic::VERSION
+	spec.authors = ["Joel Drapper"]
+	spec.email = ["joel@drapper.me"]
+
+	spec.summary = "Integrate Difftastic with the RubyGems infrastructure."
+	spec.homepage = "https://github.com/joeldrapper/difftastic-ruby"
+	spec.license = "MIT"
+	spec.required_ruby_version = ">= 3.0.0"
+
+	spec.metadata = {
+		"homepage_uri" => spec.homepage,
+		"rubygems_mfa_required" => "true",
+		"changelog_uri" => "https://github.com/joeldrapper/difftastic-ruby/releases",
+	}
+
+	spec.files = Dir["{app,config,lib}/**/*", "LICENSE", "Rakefile", "README.md"]
+	spec.bindir = "exe"
+	spec.executables << "difft"
+end

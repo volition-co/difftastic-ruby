@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+VERSION=$1
+
+if [ -z "$VERSION" ]; then
+  echo "Usage: $0 <version>"
+  exit 1
+fi
+
+printf "module Difftastic\n  VERSION = \"$VERSION\"\nend\n" > ./lib/difftastic/version.rb
+bundle
+# git add Gemfile.lock lib/difftastic/version.rb
+# git commit -m "Bump version for $VERSION"
+# git push
+
+rake package
+
+for gem in pkg/difftastic-$VERSION*.gem ; do
+  # gem push "$gem" --host https://rubygems.org
+  if [ $? -eq 0 ]; then
+    rm "$gem"
+    rm -rf "${gem/.gem/}"
+  fi
+done
