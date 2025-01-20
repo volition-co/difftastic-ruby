@@ -7,7 +7,7 @@ module Difftastic
 
 		class << self
 			def platform
-				[:cpu, :os].map { |m| Gem::Platform.local.send(m) }.join("-")
+				[:cpu, :os].map { |m| Gem::Platform.local.__send__(m) }.join("-")
 			end
 
 			def executable(exe_path: DEFAULT_DIR)
