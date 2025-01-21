@@ -9,6 +9,6 @@ module Difftastic
 			"arm64-linux" => "difft-aarch64-unknown-linux-gnu.tar.gz",
 			"x86_64-darwin" => "difft-x86_64-apple-darwin.tar.gz",
 			"x86_64-linux" => "difft-x86_64-unknown-linux-gnu.tar.gz",
-		}
+		}.freeze
 	end
 end

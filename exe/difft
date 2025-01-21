@@ -3,5 +3,5 @@
 
 # because rubygems shims assume a gem's executables are Ruby
 
-require "difftastic/commands"
+require "difftastic"
 exec(Difftastic::Commands.executable, *ARGV)
