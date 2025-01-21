@@ -4,4 +4,4 @@
 # because rubygems shims assume a gem's executables are Ruby
 
 require "difftastic"
-exec(Difftastic::Commands.executable, *ARGV)
+exec(Difftastic.executable, *ARGV)

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-#
 #  Rake tasks to manage native gem packages with binary executables from benbjohnson/difft
 #
 #  TL;DR: run "rake package"
@@ -54,7 +53,7 @@
 #
 #  Note also that the binary executables will be lazily downloaded when needed, but you can
 #  explicitly download them with the `rake download` command.
-#
+
 require "rubygems/package"
 require "rubygems/package_task"
 require "open-uri"
