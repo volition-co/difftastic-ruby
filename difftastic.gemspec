@@ -19,7 +19,13 @@ Gem::Specification.new do |spec|
 		"changelog_uri" => "https://github.com/joeldrapper/difftastic-ruby/releases",
 	}
 
-	spec.files = Dir["{app,config,lib}/**/*", "LICENSE", "Rakefile", "README.md"]
+	spec.files = Dir[
+		"lib/**/*",
+		"LICENSE",
+		"README.md"
+	]
+
 	spec.bindir = "exe"
+
 	spec.executables << "difft"
 end
