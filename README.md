@@ -1,1 +1,1 @@
-# Difftastic
+# Difftastic Ruby
