@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Difftastic::Differ
-	def initialize(background: nil, color: nil, syntax_highlight: nil, context: nil, tab_width: nil, parse_error_limit: nil, underline_highlights: true)
+	def initialize(background: nil, color: nil, syntax_highlight: nil, context: nil, tab_width: nil, parse_error_limit: nil, underline_highlights: true, left_label: nil, right_label: nil)
 		@show_paths = false
 		@background = background => :dark | :light | nil
 		@color = color => :always | :never | :auto | nil
@@ -10,6 +10,8 @@ class Difftastic::Differ
 		@tab_width = tab_width => Integer | nil
 		@parse_error_limit = parse_error_limit => Integer | nil
 		@underline_highlights = underline_highlights => true | false
+		@left_label = left_label => String | nil
+		@right_label = right_label => String | nil
 	end
 
 	def diff_objects(old, new)
@@ -297,6 +299,30 @@ class Difftastic::Differ
 			result = result.byteslice(new_line_index, result.bytesize - new_line_index)
 		end
 
+		if @left_label || @right_label
+			# Get the first content line to calculate offset
+			offset_line = @show_paths ? 1 : 0
+			first_line = result.split("\n")[offset_line]
+
+			# Calculate padding needed between labels
+			offset = right_label_offset(first_line)
+
+			left_part = if @left_label
+				Difftastic::ANSI.red(@left_label.to_s.ljust(offset))
+			else
+				" " * offset
+			end
+
+			right_part = if @right_label
+				Difftastic::ANSI.green(@right_label.to_s)
+			else
+				""
+			end
+
+			# Insert formatted labels at the top
+			result = "\n#{left_part}#{right_part}#{Difftastic::ANSI.reset}\n#{result}"
+		end
+
 		# Removed due to inconsistencies in the original output. Need to improve the pattern matching.
 		# if @underline_highlights
 		# 	result.gsub!(/\e\[([0-9;]*)m/) {
@@ -310,5 +336,17 @@ class Difftastic::Differ
 		# end
 
 		result
+	end
+
+	private
+
+	def right_label_offset(line)
+		stripped_line = ::Difftastic::ANSI.strip_formatting(line)
+		_lhs, rhs = stripped_line.split(/\s{#{@tab_width},}/, 2)
+
+		offset = (stripped_line.index("#{' ' * @tab_width}#{rhs}") || 0) + @tab_width
+		minimum_offset = 29
+
+		[minimum_offset, offset].max
 	end
 end
