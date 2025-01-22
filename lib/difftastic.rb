@@ -99,7 +99,7 @@ module Difftastic
 		when Set
 			buffer << "Set[\n"
 			indent += 1
-			object.each do |value|
+			object.to_a.sort!.each do |value|
 				buffer << ("	" * indent)
 				pretty(value, buffer:, indent:)
 				buffer << ",\n"
