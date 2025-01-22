@@ -297,16 +297,17 @@ class Difftastic::Differ
 			result = result.byteslice(new_line_index, result.bytesize - new_line_index)
 		end
 
-		if @underline_highlights
-			result.gsub!(/\e\[([0-9;]*)m/) {
-				codes = $1
-				if codes =~ /9[12]/ # Matches 91 or 92
-					"\e[#{codes};4m"
-				else
-					"\e[#{codes}m"
-				end
-			}
-		end
+		# Removed due to inconsistencies in the original output. Need to improve the pattern matching.
+		# if @underline_highlights
+		# 	result.gsub!(/\e\[([0-9;]*)m/) {
+		# 		codes = $1
+		# 		if codes =~ /9[12];1|1;9[12]/ # Matches 91;1, 92;1, 1;91, or 1;92
+		# 			"\e[#{codes};4m"
+		# 		else
+		# 			"\e[#{codes}m"
+		# 		end
+		# 	}
+		# end
 
 		result
 	end
