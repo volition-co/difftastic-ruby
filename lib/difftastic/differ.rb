@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Difftastic::Differ
-	def initialize(background: nil, color: nil, syntax_highlight: nil, context: nil, tab_width: nil, parse_error_limit: nil)
+	def initialize(background: nil, color: nil, syntax_highlight: nil, context: nil, tab_width: nil, parse_error_limit: nil, underline_highlights: true)
 		@show_paths = false
 		@background = background => :dark | :light | nil
 		@color = color => :always | :never | :auto | nil
@@ -9,6 +9,7 @@ class Difftastic::Differ
 		@context = context => Integer | nil
 		@tab_width = tab_width => Integer | nil
 		@parse_error_limit = parse_error_limit => Integer | nil
+		@underline_highlights = underline_highlights => true | false
 	end
 
 	def diff_objects(old, new)
@@ -291,11 +292,22 @@ class Difftastic::Differ
 
 		result = Difftastic.execute(options.join(" "))
 
-		if @show_paths
-			result
-		else
+		unless @show_paths
 			new_line_index = result.index("\n") + 1
-			result.byteslice(new_line_index, result.bytesize - new_line_index)
+			result = result.byteslice(new_line_index, result.bytesize - new_line_index)
 		end
+
+		if @underline_highlights
+			result.gsub!(/\e\[([0-9;]*)m/) {
+				codes = $1
+				if codes =~ /9[12]/ # Matches 91 or 92
+					"\e[#{codes};4m"
+				else
+					"\e[#{codes}m"
+				end
+			}
+		end
+
+		result
 	end
 end
