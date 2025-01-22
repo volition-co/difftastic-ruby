@@ -4,6 +4,7 @@ require "difftastic/version"
 require "tempfile"
 
 module Difftastic
+	autoload :ANSI, "difftastic/ansi"
 	autoload :Differ, "difftastic/differ"
 	autoload :Upstream, "difftastic/upstream"
 
