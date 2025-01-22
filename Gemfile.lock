@@ -8,7 +8,7 @@ GIT
 PATH
   remote: .
   specs:
-    difftastic (0.1.0)
+    difftastic (0.1.1)
 
 GEM
   remote: https://rubygems.org/
