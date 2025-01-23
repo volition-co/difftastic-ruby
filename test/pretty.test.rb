@@ -34,9 +34,9 @@ test "nested hashes" do
 
 	assert_equal_ruby Difftastic.pretty(object), <<~RUBY.chomp
 		{
-			:foo => {
-				:bar => {
-					:baz => 1,
+			foo: {
+				bar: {
+					baz: 1,
 				},
 			},
 		}
@@ -129,8 +129,8 @@ test "long arrays" do
 	"Twenty",
 	["A", "B", "C"],
 	{
-		:a => [1, 2, 3],
-		:b => {
+		a: [1, 2, 3],
+		b: {
 			"c" => 1.3232332,
 			[1, 2, 3] => Set[1, 2, 3, 4],
 		},

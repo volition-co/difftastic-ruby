@@ -78,8 +78,13 @@ module Difftastic
 			indent += 1
 			object.each do |key, value|
 				buffer << ("	" * indent)
-				buffer << pretty(key, indent:)
-				buffer << " => "
+				case key
+				when Symbol
+					buffer << "#{key.name}: "
+				else
+					buffer << pretty(key, indent:)
+					buffer << " => "
+				end
 				buffer << pretty(value, indent:)
 				buffer << ",\n"
 			end
