@@ -108,6 +108,8 @@ module Difftastic
 			indent -= 1
 			buffer << ("	" * indent)
 			buffer << "]"
+		when Module
+			buffer << object.name
 		when Symbol, String, Integer, Float, Regexp, Range, Rational, Complex, true, false, nil
 			buffer << object.inspect
 		else

@@ -57,3 +57,12 @@ test "nested arrays" do
 		]
 	RUBY
 end
+
+test "module and class" do
+	assert_equal Difftastic.pretty([Difftastic, Integer]), <<~RUBY.chomp
+		[
+			Difftastic,
+			Integer,
+		]
+	RUBY
+end
