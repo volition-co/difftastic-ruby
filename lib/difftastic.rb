@@ -71,56 +71,57 @@ module Difftastic
 		exe_file
 	end
 
-	def self.pretty(object, buffer: +"", indent: 0, indent_width: 2, max_width: 80)
+	def self.pretty(object, indent: 0, indent_width: 2, max_width: 80, indentation_bytes: "\t")
 		case object
 		when Hash
-			buffer << "{\n"
+			buffer = +"{\n"
 			indent += 1
 			object.each do |key, value|
 				buffer << ("	" * indent)
-				pretty(key, buffer:, indent:)
+				buffer << pretty(key, indent:)
 				buffer << " => "
-				pretty(value, buffer:, indent:)
+				buffer << pretty(value, indent:)
 				buffer << ",\n"
 			end
 			indent -= 1
 			buffer << ("	" * indent)
 			buffer << "}"
 		when Array
-			if (inline = pretty_inline_array(object, constraint: max_width - (indent * indent_width)))
-				buffer << inline
+			new_lines = false
+			length = 0
+			items = object.map do |item|
+				pretty_item = pretty(item, indent: indent + 1)
+				new_lines = true if pretty_item.include?("\n")
+				length += pretty_item.bytesize
+				pretty_item
+			end
+
+			if new_lines || length > max_width - (indent * indent_width)
+				"[\n#{indentation_bytes * (indent + 1)}#{items.join(",\n#{indentation_bytes * (indent + 1)}")},\n#{indentation_bytes * indent}]"
 			else
-				buffer << "[\n"
-				indent += 1
-				object.each do |value|
-					buffer << ("	" * indent)
-					pretty(value, buffer:, indent:)
-					buffer << ",\n"
-				end
-				indent -= 1
-				buffer << ("	" * indent)
-				buffer << "]"
+				"[#{items.join(', ')}]"
 			end
 		when Set
-			if (inline = pretty_inline_set(object, constraint: max_width - (indent * indent_width)))
-				buffer << inline
+			new_lines = false
+			length = 0
+			items = object.to_a.sort!.map do |item|
+				pretty_item = pretty(item, indent: indent + 1)
+				new_lines = true if pretty_item.include?("\n")
+				length += pretty_item.bytesize
+				pretty_item
+			end
+
+			if new_lines || length > max_width - (indent * indent_width)
+				"Set[\n#{indentation_bytes * (indent + 1)}#{items.join(",\n#{indentation_bytes * (indent + 1)}")},\n#{indentation_bytes * indent}]"
 			else
-				buffer << "Set[\n"
-				indent += 1
-				object.to_a.sort!.each do |value|
-					buffer << ("	" * indent)
-					pretty(value, buffer:, indent:)
-					buffer << ",\n"
-				end
-				indent -= 1
-				buffer << ("	" * indent)
-				buffer << "]"
+				"Set[#{items.join(', ')}]"
 			end
 		when Module
-			buffer << object.name
+			object.name
 		when Symbol, String, Integer, Float, Regexp, Range, Rational, Complex, true, false, nil
-			buffer << object.inspect
+			object.inspect
 		else
+			buffer = +""
 			instance_variables = object.instance_variables
 			if instance_variables.length > 0
 				buffer << "#{object.class.name}(\n"
@@ -128,7 +129,7 @@ module Difftastic
 				object.instance_variables.each do |name|
 					buffer << ("	" * indent)
 					buffer << ":#{name} => "
-					pretty(object.instance_variable_get(name), buffer:, indent:)
+					buffer << pretty(object.instance_variable_get(name), indent:)
 					buffer << ",\n"
 				end
 				indent -= 1
@@ -138,43 +139,5 @@ module Difftastic
 				buffer << "#{object.class.name}()"
 			end
 		end
-	end
-
-	def self.pretty_inline_array(object, constraint:)
-		buffer = +"["
-
-		object.each_with_index do |item, index|
-			return false unless pretty_inline_items(buffer:, item:, index:, constraint:)
-		end
-
-		buffer << "]"
-	end
-
-	def self.pretty_inline_set(object, constraint:)
-		buffer = +"Set["
-
-		object.to_a.sort!.each_with_index do |item, index|
-			return false unless pretty_inline_items(buffer:, item:, index:, constraint:)
-		end
-
-		buffer << "]"
-	end
-
-	def self.pretty_inline_items(buffer:, item:, index:, constraint:)
-		buffer << ", " unless index == 0
-		case item
-		when Array
-			buffer << pretty_inline_array(item, constraint: constraint - buffer.length)
-		when Set
-			buffer << pretty_inline_set(item, constraint: constraint - buffer.length)
-		when Module
-			buffer << item.name
-		when Symbol, String, Integer, Float, Regexp, Range, Rational, Complex, true, false, nil
-			buffer << item.inspect
-		else
-			return false
-		end
-
-		buffer.length <= constraint
 	end
 end
