@@ -4,11 +4,7 @@ test "objects" do
 	assert_equal Difftastic.pretty(Example.new), <<~RUBY.chomp
 		Example(
 			:@foo => 1,
-			:@bar => [
-				2,
-				3,
-				4,
-			],
+			:@bar => [2, 3, 4],
 		)
 	RUBY
 end
@@ -52,36 +48,65 @@ test "nested hashes" do
 end
 
 test "nested arrays" do
+	object = [[1, 2], [3, 4]]
+
+	assert_equal Difftastic.pretty(object), <<~RUBY.chomp
+		[[1, 2], [3, 4]]
+	RUBY
+end
+
+test "long arrays" do
 	object = [
-		[
-			1,
-			2,
-		],
-		[
-			3,
-			4,
-		],
+		"One",
+		"Two",
+		"Three",
+		"Four",
+		"Five",
+		"Six",
+		"Seven",
+		"Eight",
+		"Nine",
+		"Ten",
+		"Eleven",
+		"Twelve",
+		"Thirteen",
+		"Fourteen",
+		"Fifteen",
+		"Sixteen",
+		"Seventeen",
+		"Eighteen",
+		"Nineteen",
+		"Twenty",
 	]
 
 	assert_equal Difftastic.pretty(object), <<~RUBY.chomp
 		[
-			[
-				1,
-				2,
-			],
-			[
-				3,
-				4,
-			],
+			"One",
+			"Two",
+			"Three",
+			"Four",
+			"Five",
+			"Six",
+			"Seven",
+			"Eight",
+			"Nine",
+			"Ten",
+			"Eleven",
+			"Twelve",
+			"Thirteen",
+			"Fourteen",
+			"Fifteen",
+			"Sixteen",
+			"Seventeen",
+			"Eighteen",
+			"Nineteen",
+			"Twenty",
 		]
 	RUBY
 end
 
 test "module and class" do
 	assert_equal Difftastic.pretty([Difftastic, Integer]), <<~RUBY.chomp
-		[
-			Difftastic,
-			Integer,
-		]
+		[Difftastic, Integer]
 	RUBY
 end

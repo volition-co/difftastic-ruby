@@ -71,6 +71,30 @@ module Difftastic
 		exe_file
 	end
 
+	def self.inline_array(array, constraint)
+		buffer = +""
+		buffer << "["
+
+		array.each_with_index do |object, index|
+			buffer << ", " unless index == 0
+			case object
+			when Array
+				buffer << inline_array(object, constraint - buffer.length)
+			when Module
+				buffer << object.name
+			when Symbol, String, Integer, Float, Regexp, Range, Rational, Complex, true, false, nil
+				buffer << object.inspect
+			else
+				return false
+			end
+
+			return false if buffer.length > constraint
+		end
+
+		buffer << "]"
+		buffer
+	end
+
 	def self.pretty(object, buffer: +"", indent: 0)
 		case object
 		when Hash
@@ -87,16 +111,20 @@ module Difftastic
 			buffer << ("	" * indent)
 			buffer << "}"
 		when Array
-			buffer << "[\n"
-			indent += 1
-			object.each do |value|
+			if (inline = inline_array(object, 80 - (indent * 2)))
+				buffer << inline
+			else
+				buffer << "[\n"
+				indent += 1
+				object.each do |value|
+					buffer << ("	" * indent)
+					pretty(value, buffer:, indent:)
+					buffer << ",\n"
+				end
+				indent -= 1
 				buffer << ("	" * indent)
-				pretty(value, buffer:, indent:)
-				buffer << ",\n"
+				buffer << "]"
 			end
-			indent -= 1
-			buffer << ("	" * indent)
-			buffer << "]"
 		when Set
 			buffer << "Set[\n"
 			indent += 1
