@@ -71,13 +71,13 @@ module Difftastic
 		exe_file
 	end
 
-	def self.pretty(object, indent: 0, indent_width: 2, max_width: 80, indentation_bytes: "\t")
+	def self.pretty(object, indent: 0, tab_width: 2, max_width: 60)
 		case object
 		when Hash
 			buffer = +"{\n"
 			indent += 1
 			object.each do |key, value|
-				buffer << ("	" * indent)
+				buffer << ("\t" * indent)
 				case key
 				when Symbol
 					buffer << "#{key.name}: "
@@ -89,7 +89,7 @@ module Difftastic
 				buffer << ",\n"
 			end
 			indent -= 1
-			buffer << ("	" * indent)
+			buffer << ("\t" * indent)
 			buffer << "}"
 		when Array
 			new_lines = false
@@ -101,8 +101,8 @@ module Difftastic
 				pretty_item
 			end
 
-			if new_lines || length > max_width - (indent * indent_width)
-				"[\n#{indentation_bytes * (indent + 1)}#{items.join(",\n#{indentation_bytes * (indent + 1)}")},\n#{indentation_bytes * indent}]"
+			if new_lines || length > max_width - (indent * tab_width)
+				"[\n#{"\t" * (indent + 1)}#{items.join(",\n#{"\t" * (indent + 1)}")},\n#{"\t" * indent}]"
 			else
 				"[#{items.join(', ')}]"
 			end
@@ -116,8 +116,8 @@ module Difftastic
 				pretty_item
 			end
 
-			if new_lines || length > max_width - (indent * indent_width)
-				"Set[\n#{indentation_bytes * (indent + 1)}#{items.join(",\n#{indentation_bytes * (indent + 1)}")},\n#{indentation_bytes * indent}]"
+			if new_lines || length > max_width - (indent * tab_width)
+				"Set[\n#{"\t" * (indent + 1)}#{items.join(",\n#{"\t" * (indent + 1)}")},\n#{"\t" * indent}]"
 			else
 				"Set[#{items.join(', ')}]"
 			end
@@ -132,13 +132,13 @@ module Difftastic
 				buffer << "#{object.class.name}(\n"
 				indent += 1
 				object.instance_variables.each do |name|
-					buffer << ("	" * indent)
+					buffer << ("\t" * indent)
 					buffer << ":#{name} => "
 					buffer << pretty(object.instance_variable_get(name), indent:)
 					buffer << ",\n"
 				end
 				indent -= 1
-				buffer << ("	" * indent)
+				buffer << ("\t" * indent)
 				buffer << ")"
 			else
 				buffer << "#{object.class.name}()"

@@ -15,8 +15,10 @@ class Difftastic::Differ
 	end
 
 	def diff_objects(old, new)
-		old = Difftastic.pretty(old)
-		new = Difftastic.pretty(new)
+		tab_width = @tab_width || 2
+
+		old = Difftastic.pretty(old, tab_width:)
+		new = Difftastic.pretty(new, tab_width:)
 
 		diff_strings(old, new, file_extension: "rb")
 	end
