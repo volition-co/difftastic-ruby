@@ -6,10 +6,10 @@ First create a differ with your config.
 
 ```ruby
 MY_DIFFER = Difftastic::Differ.new(
-	background: :dark,
-	color: :always,
-	left_label: "Expected",
-	right_label: "Actual"
+  background: :dark,
+  color: :always,
+  left_label: "Expected",
+  right_label: "Actual"
 )
 ```
 
