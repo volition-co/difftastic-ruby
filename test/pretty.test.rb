@@ -19,11 +19,7 @@ test "sets are sorted" do
 	object = Set[2, 3, 1]
 
 	assert_equal Difftastic.pretty(object), <<~RUBY.chomp
-		Set[
-			1,
-			2,
-			3,
-		]
+		Set[1, 2, 3]
 	RUBY
 end
 

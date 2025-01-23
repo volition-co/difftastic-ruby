@@ -6,7 +6,7 @@ test do
 		[3, 2, 1]
 	)
 
-	assert_equal output, "\e[2m1 \e[0m[                           \e[2m1 \e[0m[\n\e[91;1m2 \e[0m  \e[91m1\e[0m,                        \e[92;1m2 \e[0m  \e[92m3\e[0m,\n\e[2m3 \e[0m  2,                        \e[2m3 \e[0m  2,\n\e[91;1m4 \e[0m  \e[91m3\e[0m,                        \e[92;1m4 \e[0m  \e[92m1\e[0m,\n\e[2m5 \e[0m]                           \e[2m5 \e[0m]\n\n"
+	assert_equal output, "\e[91;1m1 \e[0m[\e[91m1\e[0m, 2, \e[91m3\e[0m]                   \e[92;1m1 \e[0m[\e[92m3\e[0m, 2, \e[92m1\e[0m]\n\n"
 end
 
 test "html" do

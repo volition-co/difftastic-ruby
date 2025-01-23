@@ -71,31 +71,7 @@ module Difftastic
 		exe_file
 	end
 
-	def self.inline_array(array, constraint)
-		buffer = +""
-		buffer << "["
-
-		array.each_with_index do |object, index|
-			buffer << ", " unless index == 0
-			case object
-			when Array
-				buffer << inline_array(object, constraint - buffer.length)
-			when Module
-				buffer << object.name
-			when Symbol, String, Integer, Float, Regexp, Range, Rational, Complex, true, false, nil
-				buffer << object.inspect
-			else
-				return false
-			end
-
-			return false if buffer.length > constraint
-		end
-
-		buffer << "]"
-		buffer
-	end
-
-	def self.pretty(object, buffer: +"", indent: 0)
+	def self.pretty(object, buffer: +"", indent: 0, indent_width: 2, max_width: 80)
 		case object
 		when Hash
 			buffer << "{\n"
@@ -111,7 +87,7 @@ module Difftastic
 			buffer << ("	" * indent)
 			buffer << "}"
 		when Array
-			if (inline = inline_array(object, 80 - (indent * 2)))
+			if (inline = pretty_inline_array(object, constraint: max_width - (indent * indent_width)))
 				buffer << inline
 			else
 				buffer << "[\n"
@@ -126,16 +102,20 @@ module Difftastic
 				buffer << "]"
 			end
 		when Set
-			buffer << "Set[\n"
-			indent += 1
-			object.to_a.sort!.each do |value|
+			if (inline = pretty_inline_set(object, constraint: max_width - (indent * indent_width)))
+				buffer << inline
+			else
+				buffer << "Set[\n"
+				indent += 1
+				object.to_a.sort!.each do |value|
+					buffer << ("	" * indent)
+					pretty(value, buffer:, indent:)
+					buffer << ",\n"
+				end
+				indent -= 1
 				buffer << ("	" * indent)
-				pretty(value, buffer:, indent:)
-				buffer << ",\n"
+				buffer << "]"
 			end
-			indent -= 1
-			buffer << ("	" * indent)
-			buffer << "]"
 		when Module
 			buffer << object.name
 		when Symbol, String, Integer, Float, Regexp, Range, Rational, Complex, true, false, nil
@@ -158,5 +138,43 @@ module Difftastic
 				buffer << "#{object.class.name}()"
 			end
 		end
+	end
+
+	def self.pretty_inline_array(object, constraint:)
+		buffer = +"["
+
+		object.each_with_index do |item, index|
+			return false unless pretty_inline_items(buffer:, item:, index:, constraint:)
+		end
+
+		buffer << "]"
+	end
+
+	def self.pretty_inline_set(object, constraint:)
+		buffer = +"Set["
+
+		object.to_a.sort!.each_with_index do |item, index|
+			return false unless pretty_inline_items(buffer:, item:, index:, constraint:)
+		end
+
+		buffer << "]"
+	end
+
+	def self.pretty_inline_items(buffer:, item:, index:, constraint:)
+		buffer << ", " unless index == 0
+		case item
+		when Array
+			buffer << pretty_inline_array(item, constraint: constraint - buffer.length)
+		when Set
+			buffer << pretty_inline_set(item, constraint: constraint - buffer.length)
+		when Module
+			buffer << item.name
+		when Symbol, String, Integer, Float, Regexp, Range, Rational, Complex, true, false, nil
+			buffer << item.inspect
+		else
+			return false
+		end
+
+		buffer.length <= constraint
 	end
 end
