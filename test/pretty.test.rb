@@ -1,5 +1,24 @@
 # frozen_string_literal: true
 
+test "objects" do
+	assert_equal Difftastic.pretty(Example.new), <<~RUBY.chomp
+		Example(
+			:@foo => 1,
+			:@bar => [
+				2,
+				3,
+				4,
+			],
+		)
+	RUBY
+end
+
+test "object with no properties" do
+	assert_equal Difftastic.pretty(Object.new), <<~RUBY.chomp
+		Object()
+	RUBY
+end
+
 test "sets are sorted" do
 	object = Set[2, 3, 1]
 

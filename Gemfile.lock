@@ -1,8 +1,9 @@
 GIT
   remote: https://github.com/joeldrapper/quickdraw.git
-  revision: c4f13f78a4e60a1a2f70d063efb2c8f6832e0695
+  revision: 6e349a33bf17a57229c9fa14b82a565403438871
   specs:
     quickdraw (0.1.0)
+      difftastic (~> 0.1)
       io-watch (~> 0.6)
 
 PATH

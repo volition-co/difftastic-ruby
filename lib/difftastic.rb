@@ -113,17 +113,22 @@ module Difftastic
 		when Symbol, String, Integer, Float, Regexp, Range, Rational, Complex, true, false, nil
 			buffer << object.inspect
 		else
-			buffer << "#{object.class.name}(\n"
-			indent += 1
-			object.instance_variables.each do |name|
+			instance_variables = object.instance_variables
+			if instance_variables.length > 0
+				buffer << "#{object.class.name}(\n"
+				indent += 1
+				object.instance_variables.each do |name|
+					buffer << ("	" * indent)
+					buffer << ":#{name} => "
+					pretty(object.instance_variable_get(name), buffer:, indent:)
+					buffer << ",\n"
+				end
+				indent -= 1
 				buffer << ("	" * indent)
-				buffer << ":#{name} => "
-				pretty(object.instance_variable_get(name), buffer:, indent:)
-				buffer << ",\n"
+				buffer << ")"
+			else
+				buffer << "#{object.class.name}()"
 			end
-			indent -= 1
-			buffer << ("	" * indent)
-			buffer << ")"
 		end
 	end
 end
