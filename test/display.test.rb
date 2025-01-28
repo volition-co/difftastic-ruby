@@ -18,6 +18,12 @@ test "side-by-side" do
 	assert_equal output, "1 [1, 2, 3]\n\n"
 end
 
+test "side-by-side with left side change" do
+	output = Difftastic::Differ.new(color: :never, display: "side-by-side").diff_objects([3, 2, 1], [1, 2, 3])
+
+	assert_equal output, "1 [3, 2, 1]                   1 [1, 2, 3]\n\n"
+end
+
 test "inline" do
 	output = Difftastic::Differ.new(color: :never, display: "inline").diff_objects([], [1, 2, 3])
 
