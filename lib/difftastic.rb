@@ -74,7 +74,11 @@ module Difftastic
 		exe_file
 	end
 
-	def self.pretty(object, indent: 0, tab_width: 2, max_width: 60, max_depth: 5, max_instance_variables: 10)
+	def self.pretty(object, indent: 0, tab_width: 2, max_width: 60, max_depth: 5, max_instance_variables: 10, original_object: nil)
+		return "[self]" if object && object == original_object
+
+		original_object ||= object
+
 		case object
 		when Hash
 			return "{}" if object.empty?
@@ -87,10 +91,10 @@ module Difftastic
 				when Symbol
 					buffer << "#{key.name}: "
 				else
-					buffer << pretty(key, indent:)
+					buffer << pretty(key, indent:, original_object:)
 					buffer << " => "
 				end
-				buffer << pretty(value, indent:)
+				buffer << pretty(value, indent:, original_object:)
 				buffer << ",\n"
 			end
 			indent -= 1
@@ -100,7 +104,7 @@ module Difftastic
 			new_lines = false
 			length = 0
 			items = object.map do |item|
-				pretty_item = pretty(item, indent: indent + 1)
+				pretty_item = pretty(item, indent: indent + 1, original_object:)
 				new_lines = true if pretty_item.include?("\n")
 				length += pretty_item.bytesize
 				pretty_item
@@ -115,7 +119,7 @@ module Difftastic
 			new_lines = false
 			length = 0
 			items = object.to_a.sort!.map do |item|
-				pretty_item = pretty(item, indent: indent + 1)
+				pretty_item = pretty(item, indent: indent + 1, original_object:)
 				new_lines = true if pretty_item.include?("\n")
 				length += pretty_item.bytesize
 				pretty_item
@@ -146,11 +150,11 @@ module Difftastic
 
 						variable = object.instance_variable_get(name)
 
-						if variable && variable != object
-							if variable == object
+						if variable
+							if variable == object || variable == original_object
 								buffer << "[self]"
 							else
-								buffer << pretty(variable, indent:).to_s
+								buffer << pretty(variable, indent:, original_object:).to_s
 							end
 						else
 							buffer << variable.inspect
