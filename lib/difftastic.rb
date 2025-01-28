@@ -128,6 +128,8 @@ module Difftastic
 			end
 		when Module
 			object.name
+		when Pathname
+			%(Pathname("#{object.to_path}"))
 		when Symbol, String, Integer, Float, Regexp, Range, Rational, Complex, true, false, nil
 			object.inspect
 		else
