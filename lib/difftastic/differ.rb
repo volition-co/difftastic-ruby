@@ -3,12 +3,13 @@
 class Difftastic::Differ
 	DEFAULT_TAB_WIDTH = 2
 
-	def initialize(background: nil, color: nil, syntax_highlight: nil, context: nil, tab_width: nil, parse_error_limit: nil, underline_highlights: true, left_label: nil, right_label: nil, display: "side-by-side-show-both")
+	def initialize(background: nil, color: nil, syntax_highlight: nil, context: nil, width: nil, tab_width: nil, parse_error_limit: nil, underline_highlights: true, left_label: nil, right_label: nil, display: "side-by-side-show-both")
 		@show_paths = false
 		@background = background => :dark | :light | nil
 		@color = color => :always | :never | :auto | nil
 		@syntax_highlight = syntax_highlight => :on | :off | nil
 		@context = context => Integer | nil
+		@width = width => Integer | nil
 		@tab_width = tab_width => Integer | nil
 		@parse_error_limit = parse_error_limit => Integer | nil
 		@underline_highlights = underline_highlights => true | false
@@ -296,6 +297,7 @@ class Difftastic::Differ
 			("--syntax-highlight=#{@syntax_highlight}" if @syntax_highlight),
 			("--tab-width=#{@tab_width}" if @tab_width),
 			("--display=#{@display}" if @display),
+			("--width=#{@width}" if @width),
 		].compact!
 
 		result = Difftastic.execute(options.join(" "))
