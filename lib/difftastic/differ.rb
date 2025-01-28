@@ -353,7 +353,11 @@ class Difftastic::Differ
 		stripped_line = ::Difftastic::ANSI.strip_formatting(line)
 		_lhs, rhs = stripped_line.split(/\s{#{tab_width},}/, 2)
 
-		offset = (stripped_line.index("#{' ' * tab_width}#{rhs}") || 0) + tab_width
+		index = stripped_line.index("#{' ' * tab_width}#{rhs}")
+		index = @width / 2 if @width && index.nil?
+		index = 0 if index.nil?
+
+		offset = index + tab_width
 		minimum_offset = 29
 
 		[minimum_offset, offset].max
