@@ -201,6 +201,58 @@ test "pathname" do
 	RUBY
 end
 
+test "self-referencing" do
+	array = [1, 2, 3]
+
+	object = {
+		id: 1,
+		array:,
+	}
+
+	sibling = {
+		id: 2,
+		array: array.reverse,
+		previous_sibling: object,
+	}
+
+	parent = {
+		object:,
+		self_twice: [object, object]
+	}
+
+	object[:parent] = parent
+	object[:next_sibling] = sibling
+
+	parent[:children] = [
+		object,
+		sibling,
+	]
+
+	assert_equal_ruby Difftastic.pretty(object), <<~RUBY.chomp
+		{
+			id: 1,
+			array: [1, 2, 3],
+			parent: {
+				object: self,
+				self_twice: [self, self],
+				children: [
+					self,
+					{
+						id: 2,
+						array: [3, 2, 1],
+						previous_sibling: self,
+					},
+				],
+			},
+			next_sibling: {
+				id: 2,
+				array: [3, 2, 1],
+				previous_sibling: self,
+			},
+		}
+	RUBY
+end
+
 test "max_instance_variables" do
 	object = Object.new
 
