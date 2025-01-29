@@ -75,7 +75,7 @@ module Difftastic
 	end
 
 	def self.pretty(object, indent: 0, tab_width: 2, max_width: 60, max_depth: 5, max_instance_variables: 10, original_object: nil)
-		return "[self]" if object && object == original_object
+		return "self" if object && object == original_object
 
 		original_object ||= object
 

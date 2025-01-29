@@ -217,6 +217,7 @@ test "self-referencing" do
 
 	parent = {
 		object:,
+		self_twice: [object, object]
 	}
 
 	object[:parent] = parent
@@ -232,20 +233,21 @@ test "self-referencing" do
 			id: 1,
 			array: [1, 2, 3],
 			parent: {
-				object: [self],
+				object: self,
+				self_twice: [self, self],
 				children: [
-					[self],
+					self,
 					{
 						id: 2,
 						array: [3, 2, 1],
-						previous_sibling: [self],
+						previous_sibling: self,
 					},
 				],
 			},
 			next_sibling: {
 				id: 2,
 				array: [3, 2, 1],
-				previous_sibling: [self],
+				previous_sibling: self,
 			},
 		}
 	RUBY
