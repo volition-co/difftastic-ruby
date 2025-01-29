@@ -147,19 +147,7 @@ module Difftastic
 					object.instance_variables.take(max_instance_variables).each do |name|
 						buffer << ("\t" * indent)
 						buffer << ":#{name} => "
-
-						variable = object.instance_variable_get(name)
-
-						if variable
-							if variable == object || variable == original_object
-								buffer << "[self]"
-							else
-								buffer << pretty(variable, indent:, original_object:).to_s
-							end
-						else
-							buffer << variable.inspect
-						end
-
+						buffer << pretty(object.instance_variable_get(name), indent:, original_object:)
 						buffer << ",\n"
 					end
 
