@@ -6,7 +6,7 @@ test do
 		[3, 2, 1]
 	)
 
-	assert_equal output, "\e[91;1m1 \e[0m[\e[91m1\e[0m, 2, \e[91m3\e[0m]                   \e[92;1m1 \e[0m[\e[92m3\e[0m, 2, \e[92m1\e[0m]\n\n"
+	assert_equal output, "\e[91;1m1 \e[0m[\e[91m1\e[0m, 2, \e[91m3\e[0m]                   \e[92;1m1 \e[0m[\e[92m3\e[0m, 2, \e[92m1\e[0m]"
 end
 
 test "empty set" do
@@ -15,7 +15,7 @@ test "empty set" do
 		Set.new([1, 2, 3])
 	)
 
-	assert_equal output, %(1 Set[]                       1 Set[1, 2, 3]\n\n)
+	assert_equal output, %(1 Set[]                       1 Set[1, 2, 3])
 end
 
 test "empty array" do
@@ -24,16 +24,16 @@ test "empty array" do
 		[3, 2, 1]
 	)
 
-	assert_equal output, "1 []                          1 [3, 2, 1]\n\n"
+	assert_equal output, "1 []                          1 [3, 2, 1]"
 end
 
 test "empty string" do
 	output = Difftastic::Differ.new(color: :never, tab_width: 2).diff_objects(
 		"",
-		"String"
+		"String",
 	)
 
-	assert_equal output, %(1 ""                          1 "String"\n\n)
+	assert_equal output, %(1 ""                          1 "String")
 end
 
 test "empty symbol" do
@@ -42,7 +42,7 @@ test "empty symbol" do
 		:Symbol
 	)
 
-	assert_equal output, %(1 :""                         1 :Symbol\n\n)
+	assert_equal output, %(1 :""                         1 :Symbol)
 end
 
 test "html" do
@@ -51,5 +51,5 @@ test "html" do
 
 	output = Difftastic::Differ.new(color: :always, tab_width: 2).diff_html(a, b)
 
-	assert_equal output, "\e[2m1 \e[0m<\e[1mhtml\e[0m>                       \e[2m1 \e[0m<\e[1mhtml\e[0m>\n\e[2m2 \e[0m  <\e[1mbody\e[0m>                     \e[2m2 \e[0m  <\e[1mbody\e[0m>\n\e[91;1m3 \e[0m    <\e[1mh1\e[0m>\e[91;1;4mHello\e[0m\e[91m,\e[0m\e[91m \e[0m\e[91mworld\e[0m\e[91m!\e[0m</\e[1mh1\e[0m>   \e[92;1m3 \e[0m    <\e[1mh1\e[0m>\e[92;1;4mGoodbye\e[0m\e[92m,\e[0m\e[92m \e[0m\e[92mworld\e[0m\e[92m!\e[0m</\e[1mh1\e[0m>\n\e[2m4 \e[0m  </\e[1mbody\e[0m>                    \e[2m4 \e[0m  </\e[1mbody\e[0m>\n\e[2m5 \e[0m</\e[1mhtml\e[0m>                      \e[2m5 \e[0m</\e[1mhtml\e[0m>\n\n"
+	assert_equal output, "\e[2m1 \e[0m<\e[1mhtml\e[0m>                       \e[2m1 \e[0m<\e[1mhtml\e[0m>\n\e[2m2 \e[0m  <\e[1mbody\e[0m>                     \e[2m2 \e[0m  <\e[1mbody\e[0m>\n\e[91;1m3 \e[0m    <\e[1mh1\e[0m>\e[91;1;4mHello\e[0m\e[91m,\e[0m\e[91m \e[0m\e[91mworld\e[0m\e[91m!\e[0m</\e[1mh1\e[0m>   \e[92;1m3 \e[0m    <\e[1mh1\e[0m>\e[92;1;4mGoodbye\e[0m\e[92m,\e[0m\e[92m \e[0m\e[92mworld\e[0m\e[92m!\e[0m</\e[1mh1\e[0m>\n\e[2m4 \e[0m  </\e[1mbody\e[0m>                    \e[2m4 \e[0m  </\e[1mbody\e[0m>\n\e[2m5 \e[0m</\e[1mhtml\e[0m>                      \e[2m5 \e[0m</\e[1mhtml\e[0m>"
 end

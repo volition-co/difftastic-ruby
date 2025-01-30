@@ -300,7 +300,7 @@ class Difftastic::Differ
 			("--width=#{@width}" if @width),
 		].compact!
 
-		result = Difftastic.execute(options.join(" "))
+		result = Difftastic.execute(options.join(" ")).lstrip.sub(/\n{2}\z/, "")
 
 		unless @show_paths
 			new_line_index = result.index("\n") + 1
@@ -328,7 +328,7 @@ class Difftastic::Differ
 			end
 
 			# Insert formatted labels at the top
-			result = "\n#{left_part}#{right_part}#{Difftastic::ANSI.reset}\n#{result}"
+			result = "#{left_part}#{right_part}#{Difftastic::ANSI.reset}\n#{result}"
 		end
 
 		# Removed due to inconsistencies in the original output. Need to improve the pattern matching.
