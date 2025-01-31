@@ -92,7 +92,7 @@ test "rational" do
 end
 
 test "complex" do
-	assert_equal_ruby Difftastic.pretty(2+1i), %((2+1i))
+	assert_equal_ruby Difftastic.pretty(2 + 1i), %((2+1i))
 	assert_equal_ruby Difftastic.pretty(Complex(1)), %((1+0i))
 	assert_equal_ruby Difftastic.pretty(Complex(2, 3)), %((2+3i))
 	assert_equal_ruby Difftastic.pretty(Complex.polar(2, 3)), %((-1.9799849932008908+0.2822400161197344i))
