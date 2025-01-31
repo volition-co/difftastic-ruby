@@ -61,7 +61,7 @@ test "empty symbol" do
 end
 
 test "time" do
-	assert_equal_ruby Difftastic.pretty(Time.at(1738319106)), %(Time("2025-01-31 11:25:06 +0100"))
+	assert_equal_ruby Difftastic.pretty(Time.at(1738319106).utc), %(Time("2025-01-31 10:25:06 UTC"))
 end
 
 test "integer" do
@@ -92,7 +92,7 @@ test "rational" do
 end
 
 test "complex" do
-	assert_equal_ruby Difftastic.pretty(2+1i), %((2+1i))
+	assert_equal_ruby Difftastic.pretty(2 + 1i), %((2+1i))
 	assert_equal_ruby Difftastic.pretty(Complex(1)), %((1+0i))
 	assert_equal_ruby Difftastic.pretty(Complex(2, 3)), %((2+3i))
 	assert_equal_ruby Difftastic.pretty(Complex.polar(2, 3)), %((-1.9799849932008908+0.2822400161197344i))
