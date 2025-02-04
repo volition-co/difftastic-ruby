@@ -2,7 +2,7 @@
 
 require "difftastic/version"
 require "tempfile"
-require "sumi"
+require "pretty_please"
 
 module Difftastic
 	autoload :ANSI, "difftastic/ansi"
@@ -73,7 +73,7 @@ module Difftastic
 		exe_file
 	end
 
-	def self.pretty(object, indent: 0, tab_width: 2, max_width: 60, max_depth: 5, max_instance_variables: 10, original_object: nil)
-		Sumi.inspect(object, indent:, tab_width:, max_width:, max_depth:, max_instance_variables:, original_object:)
+	def self.pretty(object, indent: 0, tab_width: 2, max_width: 60, max_depth: 5, max_items: 10)
+		PrettyPlease.inspect(object, indent:, tab_width:, max_width:, max_depth:, max_items:)
 	end
 end

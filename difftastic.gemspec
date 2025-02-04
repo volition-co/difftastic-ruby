@@ -27,7 +27,7 @@ Gem::Specification.new do |spec|
 
 	spec.bindir = "exe"
 
-  spec.add_dependency "sumi"
+	spec.add_dependency "pretty_please"
 
 	spec.executables << "difft"
 end
