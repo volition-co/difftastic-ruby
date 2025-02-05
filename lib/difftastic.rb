@@ -74,6 +74,6 @@ module Difftastic
 	end
 
 	def self.pretty(object, indent: 0, tab_width: 2, max_width: 60, max_depth: 5, max_items: 10)
-		PrettyPlease.inspect(object, indent:, tab_width:, max_width:, max_depth:, max_items:)
+		PrettyPlease.prettify(object, indent:, tab_width:, max_width:, max_depth:, max_items:)
 	end
 end
