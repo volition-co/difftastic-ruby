@@ -9,7 +9,7 @@ GIT
 PATH
   remote: .
   specs:
-    difftastic (0.5.0)
+    difftastic (0.6.0)
       pretty_please
 
 GEM
